@@ -1,5 +1,5 @@
 function Page() {
-    return <h1>Hello world</h1>
+    return <h1>Olá, Mundo</h1>
 }
 
 export default Page
