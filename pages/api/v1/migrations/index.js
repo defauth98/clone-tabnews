@@ -5,12 +5,9 @@ import { join } from "node:path";
 async function migrations(request, response) {
   const allowedMethods = ["GET", "POST"];
   if (request.method && !allowedMethods.includes(request.method)) {
-    return response
-      .status(405)
-      .json({
-        error: `Method "${request.method}" not allowed`,
-      })
-      .end();
+    return response.status(405).json({
+      error: `Method "${request.method}" not allowed`,
+    });
   }
 
   let dbClient;
