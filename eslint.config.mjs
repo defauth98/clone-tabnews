@@ -1,14 +1,15 @@
 import js from "@eslint/js";
 import globals from "globals";
+import pluginReact from "eslint-plugin-react";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores([".next"]),
+  globalIgnores([".next/**", "test/**"]),
   {
-    basePath: ".",
-    files: ["**/*.{js,mjs,cjs}"],
+    files: ["**/*.{js,mjs,cjs,jsx}"],
     plugins: { js },
     extends: ["js/recommended"],
-    languageOptions: { globals: globals.node },
+    languageOptions: { globals: { ...globals.browser, ...globals.node } },
   },
+  pluginReact.configs.flat.recommended,
 ]);
