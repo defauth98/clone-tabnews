@@ -18,14 +18,14 @@ describe("GET /api/v1/status", () => {
       expect(responseBody.dependencies.database.version).toEqual("16.9");
 
       expect(
-        responseBody.dependencies.database.maximum_connections
+        responseBody.dependencies.database.maximum_connections,
       ).toBeDefined();
       expect(responseBody.dependencies.database.maximum_connections).toEqual(
-        100
+        100,
       );
 
       expect(
-        responseBody.dependencies.database.opened_connections
+        responseBody.dependencies.database.opened_connections,
       ).toBeDefined();
       expect(responseBody.dependencies.database.opened_connections).toEqual(1);
     });
