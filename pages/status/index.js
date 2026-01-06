@@ -8,19 +8,18 @@ async function fetchStatus() {
 
 export default function StatusPage() {
   const { isLoading, data } = useSWR("/api/v1/status", fetchStatus, {
-    refreshInterval: 2000,
+    refreshInterval: 5000,
   });
 
-  let date = "Carrengando...";
-
-  if (!isLoading && data) {
-    date = new Date(data.updated_at).toLocaleString("pt-BR");
+  if (isLoading || !data) {
+    return "Carregando...";
   }
 
   return (
     <>
       <div>
-        Data atual: <strong>{date}</strong>
+        Data atual:{" "}
+        <strong>{new Date(data.updated_at).toLocaleString("pt-BR")}</strong>
       </div>
       <div>
         Versão do Postgres:{" "}
