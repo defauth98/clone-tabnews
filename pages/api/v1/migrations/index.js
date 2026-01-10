@@ -1,7 +1,4 @@
-import {
-  onErrorHandler,
-  onNoMatchHandler,
-} from "infra/utils/custom-controller-handlers";
+import { onErrorHandler, onNoMatchHandler } from "infra/controller";
 import database from "infra/database";
 import { createRouter } from "next-connect";
 import migrationRunner from "node-pg-migrate";

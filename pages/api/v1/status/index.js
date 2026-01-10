@@ -1,10 +1,7 @@
 import { createRouter } from "next-connect";
 
 import database from "infra/database.js";
-import {
-  onErrorHandler,
-  onNoMatchHandler,
-} from "infra/utils/custom-controller-handlers";
+import { onErrorHandler, onNoMatchHandler } from "infra/controller";
 
 const router = createRouter();
 
