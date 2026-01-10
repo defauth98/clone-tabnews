@@ -11,22 +11,22 @@ router.post(postHandler);
 
 export default router.handler(controller.onErrorHandlers);
 
+const defaultMigrationRunnerOptions = {
+  dir: resolve("infra", "migrations"),
+  direction: "up",
+  verbose: true,
+  migrationsTable: "pgmigrations",
+};
+
 async function getHandler(request, response) {
   let dbClient;
 
   try {
     dbClient = await database.getNewClient();
 
-    const defaultMigrationRunnerOptions = {
-      dbClient,
-      dir: resolve("infra", "migrations"),
-      direction: "up",
-      verbose: true,
-      migrationsTable: "pgmigrations",
-    };
-
     const pendingMigrations = await migrationRunner({
       ...defaultMigrationRunnerOptions,
+      dbClient,
       dryRun: true,
     });
 
@@ -45,16 +45,9 @@ async function postHandler(request, response) {
   try {
     dbClient = await database.getNewClient();
 
-    const defaultMigrationRunnerOptions = {
-      dbClient,
-      dir: resolve("infra", "migrations"),
-      direction: "up",
-      verbose: true,
-      migrationsTable: "pgmigrations",
-    };
-
     const migratedMigrations = await migrationRunner({
       ...defaultMigrationRunnerOptions,
+      dbClient,
       dryRun: false,
     });
 
