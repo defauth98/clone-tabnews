@@ -1,16 +1,13 @@
 import { createRouter } from "next-connect";
 
 import database from "infra/database.js";
-import { onErrorHandler, onNoMatchHandler } from "infra/controller";
+import controller from "infra/controller";
 
 const router = createRouter();
 
 router.get(getHandler);
 
-export default router.handler({
-  onNoMatch: onNoMatchHandler,
-  onError: onErrorHandler,
-});
+export default router.handler(controller.onErrorHandlers);
 
 async function getHandler(request, response) {
   const updatedAt = new Date().toISOString();
