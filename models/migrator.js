@@ -1,8 +1,9 @@
 import { resolve } from "node:path";
 import database from "infra/database";
 import migrationRunner from "node-pg-migrate";
+import { ServiceError } from "infra/errors";
 
-async function runMigrations(dryRun = false) {
+async function executeMigrations(dryRun = false) {
   let dbClient;
 
   try {
@@ -18,20 +19,33 @@ async function runMigrations(dryRun = false) {
     });
 
     return migrations;
-  } catch (error) {
-    console.error(error);
-    throw error;
   } finally {
     await dbClient?.end();
   }
 }
 
 async function getPendingMigrations() {
-  return runMigrations(true);
+  try {
+    return executeMigrations(true);
+  } catch (error) {
+    console.error(error);
+    throw new ServiceError({
+      message: "Erro ao tentar listar as migrations pendentes",
+      cause: error,
+    });
+  }
 }
 
 async function runPendingMigrations() {
-  return runMigrations();
+  try {
+    return executeMigrations(false);
+  } catch (error) {
+    console.error(error);
+    throw new ServiceError({
+      message: "Erro ao tentar rodar as migrations pendentes",
+      cause: error,
+    });
+  }
 }
 
 const migrator = {
