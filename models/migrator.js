@@ -12,9 +12,9 @@ async function executeMigrations(dryRun = false) {
     const migrations = await migrationRunner({
       dir: resolve("infra", "migrations"),
       direction: "up",
-      verbose: true,
       migrationsTable: "pgmigrations",
       dbClient,
+      log: () => {},
       dryRun,
     });
 
