@@ -101,6 +101,7 @@ describe("POST /api/v1/user", () => {
             password: "any_password",
           }),
         });
+
         expect(response2.status).toBe(400);
 
         const response2Body = await response2.json();
