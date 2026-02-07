@@ -133,8 +133,6 @@ describe("PATCH /api/v1/user/[username]", () => {
         password: "any_password",
       });
 
-      console.log(createdUser);
-
       const response = await fetch(
         `http://localhost:3000/api/v1/user/${createdUser.username}`,
         {
