@@ -4,10 +4,18 @@ import user from "models/user";
 
 const router = createRouter();
 router.get(getHandler);
+router.patch(patchHandler);
 export default router.handler(controller.onErrorHandlers);
 
 async function getHandler(request, response) {
   const username = request.query.username;
   const foundedUser = await user.findOneByUsername(username);
-  response.status(200).json(foundedUser);
+  return response.status(200).json(foundedUser);
+}
+
+async function patchHandler(request, response) {
+  const username = request.query.username;
+  const userInputValues = request.body;
+  const updatedUser = await user.update(username, userInputValues);
+  return response.status(200).json(updatedUser);
 }

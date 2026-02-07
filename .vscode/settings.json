@@ -1,5 +1,5 @@
 {
-  "workbench.colorTheme": "GitHub Dark Default",
+  "workbench.colorTheme": "GitHub Dark (Web Based)",
   "workbench.iconTheme": "symbols",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[javascript]": {
