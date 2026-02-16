@@ -2,6 +2,95 @@ import database from "infra/database";
 import { NotFoundError, ValidationError } from "infra/errors";
 import password from "models/password";
 
+async function findOneById(id) {
+  const userFound = await runSelectQuery(id);
+
+  return userFound;
+
+  async function runSelectQuery(id) {
+    const results = await database.query({
+      text: `
+        SELECT
+          *
+        FROM
+          users
+        WHERE
+          id = $1
+        LIMIT
+          1
+        ;`,
+      values: [id],
+    });
+
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O id informado não foi encontrado no sistema.",
+        action: "Verifique se o id está digitado corretamente.",
+      });
+    }
+
+    return results.rows[0];
+  }
+}
+
+async function findOneByUsername(username) {
+  const user = await runSelectQuery(username);
+  return user;
+
+  async function runSelectQuery(username) {
+    const results = await database.query({
+      text: `
+        SELECT
+          *
+        FROM
+          users
+        WHERE
+          LOWER(username) = LOWER($1)
+        LIMIT 1
+      ;`,
+      values: [username],
+    });
+
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O username informado não foi encontrado no sistema.",
+        action: "Verifique se o username está digitado corretamente.",
+      });
+    }
+
+    return results.rows[0];
+  }
+}
+
+async function findOneByEmail(email) {
+  const user = await runSelectQuery(email);
+  return user;
+
+  async function runSelectQuery(email) {
+    const results = await database.query({
+      text: `
+        SELECT
+          *
+        FROM
+          users
+        WHERE
+          LOWER(email) = LOWER($1)
+        LIMIT 1
+      ;`,
+      values: [email],
+    });
+
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O email informado não foi encontrado no sistema.",
+        action: "Verifique se o email está digitado corretamente.",
+      });
+    }
+
+    return results.rows[0];
+  }
+}
+
 async function create(userInputValues) {
   await validateUniqueEmail(userInputValues.email);
   await validateUniqueUsername(userInputValues.username);
@@ -82,64 +171,6 @@ async function runInsertQuery(userInputValues) {
   return results.rows[0];
 }
 
-async function findOneByUsername(username) {
-  const user = await runSelectQuery(username);
-  return user;
-
-  async function runSelectQuery(username) {
-    const results = await database.query({
-      text: `
-        SELECT
-          *
-        FROM
-          users
-        WHERE
-          LOWER(username) = LOWER($1)
-        LIMIT 1
-      ;`,
-      values: [username],
-    });
-
-    if (results.rowCount === 0) {
-      throw new NotFoundError({
-        message: "O username informado não foi encontrado no sistema.",
-        action: "Verifique se o username está digitado corretamente.",
-      });
-    }
-
-    return results.rows[0];
-  }
-}
-
-async function findOneByEmail(email) {
-  const user = await runSelectQuery(email);
-  return user;
-
-  async function runSelectQuery(email) {
-    const results = await database.query({
-      text: `
-        SELECT
-          *
-        FROM
-          users
-        WHERE
-          LOWER(email) = LOWER($1)
-        LIMIT 1
-      ;`,
-      values: [email],
-    });
-
-    if (results.rowCount === 0) {
-      throw new NotFoundError({
-        message: "O email informado não foi encontrado no sistema.",
-        action: "Verifique se o email está digitado corretamente.",
-      });
-    }
-
-    return results.rows[0];
-  }
-}
-
 async function validateUniqueUsername(username) {
   const results = await database.query({
     text: `
@@ -183,6 +214,7 @@ async function validateUniqueEmail(email) {
 }
 
 const user = {
+  findOneById,
   findOneByUsername,
   findOneByEmail,
   create,

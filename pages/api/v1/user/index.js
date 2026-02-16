@@ -1,13 +1,20 @@
 import { createRouter } from "next-connect";
 import controller from "infra/controller";
+import session from "models/session";
 import user from "models/user";
 
 const router = createRouter();
-router.post(postHandler);
+router.get(getHandler);
 export default router.handler(controller.errorHandlers);
 
-async function postHandler(request, response) {
-  const userInputValues = request.body;
-  const newUser = await user.create(userInputValues);
-  response.status(201).json(newUser);
+async function getHandler(request, response) {
+  const sessionToken = request.cookies.session_id;
+
+  const sessionObject = await session.findOneValidByToken(sessionToken);
+  const renewedSession = await session.renew(sessionObject.id);
+  controller.setSessionCookie(renewedSession.token, response);
+
+  const userFound = await user.findOneById(sessionObject.user_id);
+
+  return response.status(200).json(userFound);
 }

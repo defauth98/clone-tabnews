@@ -9,11 +9,11 @@ beforeAll(async () => {
   await orchestrator.runPendingMigrations();
 });
 
-describe("PATCH /api/v1/user/[username]", () => {
+describe("PATCH /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
     test("With nonexistent username", async () => {
       const response2 = await fetch(
-        "http://localhost:3000/api/v1/user/UsuarioQueNãoExistente",
+        "http://localhost:3000/api/v1/users/UsuarioQueNãoExistente",
         { method: "PATCH" },
       );
 
@@ -37,15 +37,18 @@ describe("PATCH /api/v1/user/[username]", () => {
         username: "user2",
       });
 
-      const response2 = await fetch("http://localhost:3000/api/v1/user/user2", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const response2 = await fetch(
+        "http://localhost:3000/api/v1/users/user2",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: "user1",
+          }),
         },
-        body: JSON.stringify({
-          username: "user1",
-        }),
-      });
+      );
 
       expect(response2.status).toBe(400);
 
@@ -68,7 +71,7 @@ describe("PATCH /api/v1/user/[username]", () => {
       });
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/user/${createdUser2.username}`,
+        `http://localhost:3000/api/v1/users/${createdUser2.username}`,
         {
           method: "PATCH",
           headers: {
@@ -96,7 +99,7 @@ describe("PATCH /api/v1/user/[username]", () => {
       });
 
       const response = await fetch(
-        "http://localhost:3000/api/v1/user/uniqueUser1",
+        "http://localhost:3000/api/v1/users/uniqueUser1",
         {
           method: "PATCH",
           headers: {
@@ -134,7 +137,7 @@ describe("PATCH /api/v1/user/[username]", () => {
       });
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/user/${createdUser.username}`,
+        `http://localhost:3000/api/v1/users/${createdUser.username}`,
         {
           method: "PATCH",
           headers: {

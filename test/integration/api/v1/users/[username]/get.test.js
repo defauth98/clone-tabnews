@@ -7,7 +7,7 @@ beforeAll(async () => {
   await orchestrator.runPendingMigrations();
 });
 
-describe("GET /api/v1/user/[username]", () => {
+describe("GET /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
     test("With exact match case", async () => {
       await orchestrator.createUser({
@@ -17,7 +17,7 @@ describe("GET /api/v1/user/[username]", () => {
       });
 
       const response2 = await fetch(
-        "http://localhost:3000/api/v1/user/MesmoCase",
+        "http://localhost:3000/api/v1/users/MesmoCase",
       );
 
       expect(response2.status).toBe(200);
@@ -44,7 +44,7 @@ describe("GET /api/v1/user/[username]", () => {
       });
 
       const response = await fetch(
-        "http://localhost:3000/api/v1/user/casediferente",
+        "http://localhost:3000/api/v1/users/casediferente",
       );
 
       expect(response.status).toBe(200);
@@ -65,7 +65,7 @@ describe("GET /api/v1/user/[username]", () => {
 
     test("With nonexistent user", async () => {
       const response2 = await fetch(
-        "http://localhost:3000/api/v1/user/UsuarioQueNãoExistente",
+        "http://localhost:3000/api/v1/users/UsuarioQueNãoExistente",
       );
 
       expect(response2.status).toBe(404);
