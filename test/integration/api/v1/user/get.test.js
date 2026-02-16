@@ -24,6 +24,11 @@ describe("GET /api/v1/user", () => {
         },
       });
 
+      const cacheControl = response.headers.get("Cache-Control");
+      expect(cacheControl).toBe(
+        "no-store, no-cache, max-age=0, must-revalidate",
+      );
+
       expect(response.status).toBe(200);
       const responseBody = await response.json();
 
@@ -83,6 +88,11 @@ describe("GET /api/v1/user", () => {
           Cookie: `session_id=${sessionObject.token}`,
         },
       });
+
+      const cacheControl = response.headers.get("Cache-Control");
+      expect(cacheControl).toBe(
+        "no-store, no-cache, max-age=0, must-revalidate",
+      );
 
       expect(response.status).toBe(200);
       const responseBody = await response.json();
