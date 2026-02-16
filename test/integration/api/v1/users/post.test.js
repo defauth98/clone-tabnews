@@ -9,11 +9,11 @@ beforeAll(async () => {
   await orchestrator.runPendingMigrations();
 });
 
-describe("POST /api/v1/user", () => {
+describe("POST /api/v1/users", () => {
   describe("Anonymous user", () => {
     describe("Create user", () => {
       test("With unique and valid data", async () => {
-        const response = await fetch("http://localhost:3000/api/v1/user", {
+        const response = await fetch("http://localhost:3000/api/v1/users", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -57,7 +57,7 @@ describe("POST /api/v1/user", () => {
       });
 
       test("With duplicated 'email'", async () => {
-        const response1 = await fetch("http://localhost:3000/api/v1/user", {
+        const response1 = await fetch("http://localhost:3000/api/v1/users", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -70,7 +70,7 @@ describe("POST /api/v1/user", () => {
         });
         expect(response1.status).toBe(201);
 
-        const response2 = await fetch("http://localhost:3000/api/v1/user", {
+        const response2 = await fetch("http://localhost:3000/api/v1/users", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -93,7 +93,7 @@ describe("POST /api/v1/user", () => {
       });
 
       test("With duplicated 'username'", async () => {
-        const response1 = await fetch("http://localhost:3000/api/v1/user", {
+        const response1 = await fetch("http://localhost:3000/api/v1/users", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -106,7 +106,7 @@ describe("POST /api/v1/user", () => {
         });
         expect(response1.status).toBe(201);
 
-        const response2 = await fetch("http://localhost:3000/api/v1/user", {
+        const response2 = await fetch("http://localhost:3000/api/v1/users", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
