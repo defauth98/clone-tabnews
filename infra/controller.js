@@ -11,7 +11,7 @@ import * as cookie from "cookie";
 function onNoMatchHandler(request, response) {
   const publicMethodNotAllowedErrorObject = new MethodNotAllowedError();
 
-  response.status(405).json(publicMethodNotAllowedErrorObject);
+  return response.status(405).json(publicMethodNotAllowedErrorObject);
 }
 
 function onErrorHandler(error, request, response) {
