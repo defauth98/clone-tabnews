@@ -8,6 +8,8 @@ import {
   ValidationError,
 } from "./errors";
 import * as cookie from "cookie";
+import authorization from "models/authorization";
+import user from "models/user";
 
 function onNoMatchHandler(request, response) {
   const publicMethodNotAllowedErrorObject = new MethodNotAllowedError();
@@ -16,7 +18,11 @@ function onNoMatchHandler(request, response) {
 }
 
 function onErrorHandler(error, request, response) {
-  if (error instanceof ValidationError || error instanceof NotFoundError || error instanceof ForbiddenError) {
+  if (
+    error instanceof ValidationError ||
+    error instanceof NotFoundError ||
+    error instanceof ForbiddenError
+  ) {
     return response.status(error.statusCode).json(error);
   }
 
@@ -79,7 +85,7 @@ async function injectAuthenticatedUser(request) {
 
 function injectAnonymousUser(request) {
   const anonymousUserObject = {
-    features: ["read:activation_token", "create:session","create:user"],
+    features: ["read:activation_token", "create:session", "create:user"],
   };
 
   request.context = {
@@ -92,7 +98,7 @@ function canRequest(feature) {
   return function canRequestMiddleware(request, response, next) {
     const userTryingToRequest = request.context.user;
 
-    if (userTryingToRequest.features.includes(feature)) {
+    if (authorization.can(userTryingToRequest, feature)) {
       return next();
     }
 
@@ -111,7 +117,7 @@ const controller = {
   setSessionCookie,
   clearSessionCookie,
   injectAnonymousOrUser,
-  canRequest
+  canRequest,
 };
 
 export default controller;
