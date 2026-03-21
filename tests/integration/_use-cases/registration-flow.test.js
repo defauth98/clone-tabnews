@@ -1,7 +1,7 @@
-import webserver from "infra/webserver";
-import activation from "models/activation";
-import user from "models/user";
+import user from "models/user.js";
+import activation from "models/activation.js";
 import orchestrator from "tests/orchestrator.js";
+import webserver from "infra/webserver.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -38,9 +38,9 @@ describe("Use case: Registration Flow (all successful)", () => {
     expect(createUserResponseBody).toEqual({
       id: createUserResponseBody.id,
       username: "RegistrationFlow",
-      email: createUserResponseBody.email,
-      password: createUserResponseBody.password,
+      email: "registration.flow@curso.dev",
       features: ["read:activation_token"],
+      password: createUserResponseBody.password,
       created_at: createUserResponseBody.created_at,
       updated_at: createUserResponseBody.updated_at,
     });
@@ -82,11 +82,11 @@ describe("Use case: Registration Flow (all successful)", () => {
     expect(Date.parse(activationResponseBody.used_at)).not.toBeNaN();
 
     const activatedUser = await user.findOneByUsername("RegistrationFlow");
-    expect(activatedUser.features).toEqual(["create:session"]);
+    expect(activatedUser.features).toEqual(["create:session", "read:session"]);
   });
 
   test("Login", async () => {
-     const createSessionsResponse = await fetch(
+    const createSessionsResponse = await fetch(
       "http://localhost:3000/api/v1/sessions",
       {
         method: "POST",
@@ -107,5 +107,17 @@ describe("Use case: Registration Flow (all successful)", () => {
     expect(createSessionsResponseBody.user_id).toBe(createUserResponseBody.id);
   });
 
-  test("Get user information", async () => {});
+  test("Get user information", async () => {
+    const userResponse = await fetch("http://localhost:3000/api/v1/user", {
+      headers: {
+        cookie: `session_id=${createSessionsResponseBody.token}`,
+      },
+    });
+
+    expect(userResponse.status).toBe(200);
+
+    const userResponseBody = await userResponse.json();
+
+    expect(userResponseBody.id).toBe(createUserResponseBody.id);
+  });
 });
