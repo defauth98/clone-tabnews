@@ -24,7 +24,7 @@ async function executeMigrations(dryRun = false) {
   }
 }
 
-async function getPendingMigrations() {
+async function listPendingMigrations() {
   try {
     return executeMigrations(true);
   } catch (error) {
@@ -49,7 +49,7 @@ async function runPendingMigrations() {
 }
 
 const migrator = {
-  getPendingMigrations,
+  listPendingMigrations,
   runPendingMigrations,
 };
 
