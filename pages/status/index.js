@@ -27,7 +27,7 @@ export default function StatusPage() {
       </div>
       <div>
         Conexões máximas:{" "}
-        <strong>{data.dependencies.database.maximum_connections}</strong>
+        <strong>{data.dependencies.database.max_connections}</strong>
       </div>
       <div>
         Conexões abertas:{" "}
