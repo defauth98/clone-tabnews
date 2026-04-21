@@ -64,8 +64,8 @@ async function createUser(userObject = {}) {
   });
 }
 
-async function createSession(userId) {
-  return session.create(userId);
+async function createSession(user) {
+  return session.create(user.id);
 }
 
 async function deleteAllEmails() {
