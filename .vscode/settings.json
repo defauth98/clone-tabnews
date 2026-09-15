@@ -1,5 +1,5 @@
 {
-  "workbench.colorTheme": "GitHub Dark (Web Based)",
+  "workbench.colorTheme": "GitHub Dark Default",
   "workbench.iconTheme": "symbols",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[javascript]": {
@@ -8,5 +8,8 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "github.copilot.enable": {
+    "*": false
+  }
 }
