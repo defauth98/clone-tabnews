@@ -46,7 +46,7 @@ export default function DefaultLayout({
           {children}
         </PageLayout.Content>
         <PageLayout.Footer divider="line">
-          <Text size="small">© {new Date().getFullYear()}</Text>
+          <Text size="small">FinTab © {new Date().getFullYear()}</Text>
         </PageLayout.Footer>
       </PageLayout>
     </>

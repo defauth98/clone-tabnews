@@ -1,38 +1,86 @@
+import { Banner, Heading, Stack } from "@primer/react";
+import { Card } from "@primer/react/experimental";
+import DefaultLayout from "interface/DefaultLayout";
 import useSWR from "swr";
 
-async function fetchStatus() {
-  const response = await fetch("/api/v1/status");
+async function fetchAPI(key) {
+  const response = await fetch(key);
   const responseBody = await response.json();
   return responseBody;
 }
 
 export default function StatusPage() {
-  const { isLoading, data } = useSWR("/api/v1/status", fetchStatus, {
-    refreshInterval: 5000,
+  return (
+    <DefaultLayout contentWidth="medium" metadata={{ title: "Status" }}>
+      <Stack gap="spacious">
+        <DatabaseStatus />
+        <UpdatedAt />
+      </Stack>
+    </DefaultLayout>
+  );
+}
+
+function UpdatedAt() {
+  const { isLoading, data } = useSWR("/api/v1/status", fetchAPI, {
+    refreshInterval: 2000,
   });
 
-  if (isLoading || !data) {
-    return "Carregando...";
+  let updatedAtText = "Carregando...";
+
+  if (!isLoading && data) {
+    updatedAtText = new Date(data.updated_at).toLocaleString("pt-BR");
   }
 
   return (
-    <>
-      <div>
-        Data atual:{" "}
-        <strong>{new Date(data.updated_at).toLocaleString("pt-BR")}</strong>
-      </div>
-      <div>
-        Versão do Postgres:{" "}
-        <strong>{data.dependencies.database.version}</strong>
-      </div>
-      <div>
-        Conexões máximas:{" "}
-        <strong>{data.dependencies.database.max_connections}</strong>
-      </div>
-      <div>
-        Conexões abertas:{" "}
-        <strong>{data.dependencies.database.opened_connections}</strong>
-      </div>
-    </>
+    <Banner variant="info" layout="compact">
+      <Banner.Title>Última atualização: {updatedAtText}</Banner.Title>
+    </Banner>
+  );
+}
+
+function DatabaseStatus() {
+  const { isLoading, data } = useSWR("/api/v1/status", fetchAPI, {
+    refreshInterval: 2000,
+  });
+
+  if (isLoading || !data) {
+    return;
+  }
+
+  const database = data.dependencies.database;
+  const openedConnections = database.opened_connections;
+  const maxConnections = database.max_connections;
+  const version = database.version ?? "-";
+
+  return (
+    <Stack>
+      <Heading as="h2" variant="medium">
+        Database
+      </Heading>
+
+      <Stack direction={{ narrow: "vertical", regular: "horizontal" }}>
+        <Stack.Item grow>
+          <Card>
+            <Card.Heading>Conexões abertas</Card.Heading>
+            <Card.Description>{openedConnections}</Card.Description>
+            <Card.Metadata>Uso neste instante</Card.Metadata>
+          </Card>
+        </Stack.Item>
+        <Stack.Item grow>
+          <Card>
+            <Card.Heading>Conexões maxímas</Card.Heading>
+            <Card.Description>{maxConnections}</Card.Description>
+            <Card.Metadata>Conexões disponíveis</Card.Metadata>
+          </Card>
+        </Stack.Item>
+        <Stack.Item grow>
+          <Card>
+            <Card.Heading>PostgreSQL</Card.Heading>
+            <Card.Description>{version}</Card.Description>
+            <Card.Metadata>Versão em execução</Card.Metadata>
+          </Card>
+        </Stack.Item>
+      </Stack>
+    </Stack>
   );
 }
