@@ -36,7 +36,7 @@ function RegisterForm() {
       body: JSON.stringify(requestBody),
     });
 
-    if (response.status == 20) {
+    if (response.status == 201) {
       location.href = "/cadastro/confirmar";
     }
   }

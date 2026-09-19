@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
-      "*": ["./*"]
+      "infra/*": ["infra/*"],
+      "interface/*": ["interface/*"],
+      "models/*": ["models/*"],
+      "tests/*": ["tests/*"]
     }
   }
 }
